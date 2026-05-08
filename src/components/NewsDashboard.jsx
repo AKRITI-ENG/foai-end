@@ -164,7 +164,7 @@ export default function NewsDashboard({ selectedCategory, onCategorySelect }) {
             {filteredAndSortedNews.map((article) => (
               <article 
                 key={article.id} 
-                className="group flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-[hsl(var(--border))]/40 bg-[hsl(var(--background))]/40 hover:bg-[hsl(var(--muted))]/50 hover:border-[hsl(var(--border))] transition-all hover:shadow-md"
+                className="group flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-[hsl(var(--border))]/40 bg-[hsl(var(--card))]/50 backdrop-blur-md hover:bg-[hsl(var(--card))]/80 hover:border-purple-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1"
               >
                 <div className="w-full sm:w-32 h-40 sm:h-32 shrink-0 overflow-hidden rounded-lg bg-[hsl(var(--muted))] relative">
                   <img

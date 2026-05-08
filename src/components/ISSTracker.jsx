@@ -118,6 +118,10 @@ export default function ISSTracker() {
                 <span>Lon: {position.lon.toFixed(4)}°</span>
               </p>
             )}
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold uppercase tracking-wider">
+              <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+              {path.length} {path.length === 1 ? 'Position' : 'Positions'} Tracked
+            </div>
           </div>
         </div>
 

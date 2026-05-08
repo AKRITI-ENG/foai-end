@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -41,11 +41,34 @@ export default function Charts({ onCategorySelect, selectedCategory }) {
   const { categoryCounts } = useNewsData();
   const [activeIndex, setActiveIndex] = useState(-1);
 
-  const newsData = Object.entries(categoryCounts).map(([name, value]) => ({
-    name: name,
-    displayName: name.length > 15 ? name.substring(0, 15) + '...' : name,
-    value
-  }));
+  const newsData = useMemo(() => {
+    const entries = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
+    
+    if (entries.length <= 7) {
+      return entries.map(([name, value]) => ({
+        name: name,
+        displayName: name.length > 15 ? name.substring(0, 15) + '...' : name,
+        value
+      }));
+    }
+
+    const top6 = entries.slice(0, 6);
+    const othersValue = entries.slice(6).reduce((acc, curr) => acc + curr[1], 0);
+    
+    const data = top6.map(([name, value]) => ({
+      name: name,
+      displayName: name.length > 15 ? name.substring(0, 15) + '...' : name,
+      value
+    }));
+
+    data.push({
+      name: 'Others',
+      displayName: 'Others',
+      value: othersValue
+    });
+
+    return data;
+  }, [categoryCounts]);
 
   // Create some default dummy data if no speed history is available yet
   const displaySpeedData = speedHistory.length > 0 ? speedHistory : Array.from({length: 10}).map((_, i) => ({
@@ -196,10 +219,10 @@ export default function Charts({ onCategorySelect, selectedCategory }) {
                   />
                   <Legend 
                     verticalAlign="bottom" 
-                    height={36} 
+                    height={48} 
                     iconType="circle" 
                     formatter={(value, entry, index) => (
-                      <span className={`text-sm ${activeIndex === -1 || activeIndex === index ? 'text-[hsl(var(--foreground))] font-medium' : 'text-[hsl(var(--muted-foreground))]'}`}>
+                      <span className={`text-[10px] sm:text-xs ${activeIndex === -1 || activeIndex === index ? 'text-[hsl(var(--foreground))] font-medium' : 'text-[hsl(var(--muted-foreground))]'}`}>
                         {newsData[index].displayName}
                       </span>
                     )}
@@ -207,7 +230,11 @@ export default function Charts({ onCategorySelect, selectedCategory }) {
                        const idx = newsData.findIndex(d => d.displayName === e.value);
                        if (idx !== -1) handlePieClick(newsData[idx], idx);
                     }}
-                    wrapperStyle={{ cursor: 'pointer' }}
+                    wrapperStyle={{ 
+                      cursor: 'pointer',
+                      paddingTop: '10px',
+                      fontSize: '12px'
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
